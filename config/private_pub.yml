@@ -6,5 +6,5 @@
 
 production:
   server: "drakenfaye.herokuapp.com/faye"
-  secret_token: "batkaro"
+  secret_token: "73f9ded1d77115cde6a1e9c3726628882f5fc8affe35cec2b55a1229892b74d8"
   signature_expiration: 86400 # one day
