@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gem 'rails','3.2.12'
-gem 'private_pub'
+gem 'rails', '4.2.4'
 gem 'thin'
-gem 'foreman'
+gem 'faye-rails'
+gem 'activesupport'
