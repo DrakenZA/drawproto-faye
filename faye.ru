@@ -46,7 +46,7 @@ def connected_users
 end
 
 
-def incoming(message,request,callback)
+def incoming(message,callback)
 
 
 if message["channel"] == "/meta/connect" && message['ext'] != nil
