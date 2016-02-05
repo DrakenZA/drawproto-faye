@@ -80,7 +80,7 @@ end
 
 
 def faye_client
-  @faye_client ||= Faye::Client.new('https://localhost/faye')
+  @faye_client ||= Faye::Client.new('https://drakenfaye.herokuapp.com/faye')
   # @faye_client ||= Faye::Client.new('http://localhost:9292/faye')
 
 end
