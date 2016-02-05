@@ -46,12 +46,12 @@ def connected_users
 end
 
 
-def incoming(message,callback)
+def incoming(message,request,callback)
 
 
 if message["channel"] == "/meta/connect"
 
-connected_users[message["ext"]["username"]] = "online"
+connected_users[message["ext"]["username"]] = "online" if message["ext"]["username"]
 faye_client.publish('/currentliveusers', :command => connected_users.keys, :password => "magic")
 
 
