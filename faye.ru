@@ -41,14 +41,17 @@ end
 
 class Currentusers
   def faye_client
-    @faye_client ||= Faye::Client.new('https://drakenfaye.herokuapp.com/faye')
-    # @faye_client ||= Faye::Client.new('http://localhost:9292/faye')
+    # @faye_client ||= Faye::Client.new('https://drakenfaye.herokuapp.com/faye')
+    @faye_client ||= Faye::Client.new('http://localhost:9292/faye')
 
   end
 
 
 def connected_users
   @connected_users ||= {}
+end
+def connected_users_ids
+  @connected_users_ids ||= {}
 end
 
 
@@ -58,7 +61,9 @@ def incoming(message,callback)
 if message["channel"] == "/meta/connect" && message['ext'] != nil
 
 connected_users[message["ext"]["username"]] = message['clientId']
-faye_client.publish('/currentliveusers', :command => connected_users.keys, :password => "magic")
+connected_users_ids[message["ext"]["username"]] = message['ext']['roomid']
+
+faye_client.publish('/currentliveusers_'+message['ext']['roomid'], :command => connected_users.keys & connected_users_ids.select{|key,value| value == message['ext']['roomid']}.keys, :password => "magic")
 
 
 end
@@ -73,8 +78,8 @@ end
  # end
 
 
-if message["channel"] == '/meta/subscribe' && message['subscription'] == "/currentliveusers"
-  faye_client.publish('/currentliveusers', :command => connected_users.keys, :password => "magic")
+if message["channel"] == '/meta/subscribe' && message['subscription'] == "/currentliveusers_"+message['ext']['roomid']
+  faye_client.publish('/currentliveusers_'+message['ext']['roomid'], :command => connected_users.keys & connected_users_ids.select{|key,value| value == message['ext']['roomid']}.keys, :password => "magic")
 end
 
 
@@ -105,8 +110,16 @@ end
  faye.add_extension(currentuserobject)
 
  faye.on(:disconnect) do |client_id|
+
+   roomid = currentuserobject.connected_users_ids[currentuserobject.connected_users.key(client_id)] if currentuserobject.connected_users_ids != nil
  currentuserobject.connected_users.delete(currentuserobject.connected_users.key(client_id))
- currentuserobject.faye_client.publish('/currentliveusers', :command => currentuserobject.connected_users.keys, :password => "magic")
+ currentuserobject.connected_users_ids.delete(currentuserobject.connected_users.key(client_id))
+
+if roomid != nil
+ currentuserobject.faye_client.publish('/currentliveusers_'+roomid, :command => currentuserobject.connected_users.keys & currentuserobject.connected_users_ids.select{|key,value| value == roomid}.keys, :password => "magic")
+end
+
+
 
  end
 
