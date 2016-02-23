@@ -61,9 +61,8 @@ def incoming(message,callback)
 if message["channel"] == '/meta/subscribe'
 returnedtoken = checkinfo(message['ext']['token'],message['ext']['username'],message['ext']['roomid'])
 
-returnedtoken = JSON.parse(returnedtoken)
-rescue JSON::ParserError => e
-end
+# returnedtoken = JSON.parse(returnedtoken)
+
 
 
 callback.call(message) and return if returnedtoken["siteadmin"] == true
