@@ -42,7 +42,7 @@ end
 class Backend_connection
 def backend_loc
   # @backend_loc ||= URI.parse("http://127.0.0.1:3000/getuserinfoapi")
-  @backend_loc ||= URI.parse("https://drakenprototype.herokuapp.com/getuserinfoapi")
+  @backend_loc ||= URI.parse("http://drakenprototype.herokuapp.com/getuserinfoapi")
 
 end
 
