@@ -47,8 +47,17 @@ def backend_loc
 end
 
 def checkinfo(token,username,roomid)
+
+  moo = backend_loc
   form_data = {"token" => token,"username" => username, "roomid" => roomid}
-res = Net::HTTP.post_form backend_loc, form_data
+  req = Net::HTTP::Post.new(moo, initheader = {'Content-Type' =>'application/json'})
+  req.body = form_data.to_json
+
+  res = Net::HTTP.start(moo.hostname,moo.port) do |http|
+    http.request(req)
+  end
+
+# res = Net::HTTP.post_form backend_loc, form_data
 
 
   return res.body
@@ -61,7 +70,8 @@ def incoming(message,callback)
 if message["channel"] == '/meta/subscribe'
 returnedtoken = checkinfo(message['ext']['token'],message['ext']['username'],message['ext']['roomid'])
 
-# returnedtoken = JSON.parse(returnedtoken)
+ returnedtoken = JSON.parse(returnedtoken)
+ puts returnedtoken
 
 
 
