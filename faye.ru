@@ -69,8 +69,11 @@ def incoming(message,callback)
 
 if message["channel"] == '/meta/subscribe'
 returnedtoken = checkinfo(message['ext']['token'],message['ext']['username'],message['ext']['roomid'])
-  returntoken = returntoken.to_json
- returnedtoken = JSON.parse(returnedtoken)
+if returnedtoken.include? 'usermatch'
+ returnedtoken = JSON.parse(returnedtoken, :quirks_mode => true)
+ else
+   return
+end
 
 
 callback.call(message) and return if returnedtoken["siteadmin"] == true
